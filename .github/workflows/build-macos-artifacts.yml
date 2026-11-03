@@ -79,9 +79,11 @@ jobs:
           - arch: arm64
             rust_target: aarch64-apple-darwin
             resource_key: darwin-arm64
+            runner: macos-15
           - arch: x64
             rust_target: x86_64-apple-darwin
             resource_key: darwin-x64
+            runner: macos-15-intel
     permissions:
       actions: read
       contents: read
@@ -96,7 +98,7 @@ jobs:
       clerk_cli_oauth_client_id: ""
       relay_url: ""
       label: macOS ${{ matrix.arch }}
-      runner: macos-26
+      runner: ${{ matrix.runner }}
       platform: mac
       target: dmg
       arch: ${{ matrix.arch }}
