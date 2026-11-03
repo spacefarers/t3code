@@ -2710,7 +2710,11 @@ export function resolveDesktopUpdateChannel(version: string): "latest" | "nightl
 }
 
 export function isDesktopPreviewVersion(version: string): boolean {
-  return /-pr\./.test(version) || /-preview\.\d{8}\.\d+$/.test(version);
+  return (
+    /-pr\./.test(version) ||
+    /-preview\.\d{8}\.\d+$/.test(version) ||
+    /-artifact\.\d+$/.test(version)
+  );
 }
 
 export function resolveDesktopWebAssetBrand(version: string): WebAssetBrand {

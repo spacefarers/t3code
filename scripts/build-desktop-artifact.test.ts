@@ -527,8 +527,19 @@ it.layer(NodeServices.layer)("build-desktop-artifact", (it) => {
         undefined,
       );
 
+      const artifact = yield* createBuildConfig(
+        "mac",
+        "dmg",
+        "0.1.6-artifact.4",
+        false,
+        false,
+        undefined,
+        undefined,
+      );
+
       assert.isNull(preview.publish);
       assert.isNull(previewChannel.publish);
+      assert.isNull(artifact.publish);
       assert.deepStrictEqual(release.publish, [
         {
           provider: "github",
