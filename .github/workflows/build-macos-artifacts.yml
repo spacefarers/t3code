@@ -103,4 +103,3 @@ jobs:
       rust_target: ${{ matrix.rust_target }}
       resource_key: ${{ matrix.resource_key }}
       cli_archive: false
-      launch_check: true
