@@ -1043,7 +1043,7 @@ jobs:
       AUR_SSH_PRIVATE_KEY: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
 
   # Vercel builds the hosted web app while the desktop jobs run. `--skip-domain`
-  # keeps the custom domains (the channel and router domains) on the previous
+  # keeps configured custom domains on the previous
   # deployment until deploy_web aliases them, after the GitHub Release. It does
   # still move the project's own *.vercel.app production hostname at build time.
   # That hostname sits behind Vercel SSO and is not a user channel, so the
@@ -1065,6 +1065,8 @@ jobs:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       T3CODE_WEB_ROUTER_URL: ${{ vars.T3CODE_WEB_ROUTER_URL }}
+      T3CODE_WEB_LATEST_DOMAIN: ${{ vars.T3CODE_WEB_LATEST_DOMAIN }}
+      T3CODE_WEB_NIGHTLY_DOMAIN: ${{ vars.T3CODE_WEB_NIGHTLY_DOMAIN }}
       VERCEL_TEAM_SLUG: ${{ vars.VERCEL_TEAM_SLUG }}
     steps:
       - name: Checkout
@@ -1112,11 +1114,16 @@ jobs:
             exit 1
           fi
 
-          router_url="${T3CODE_WEB_ROUTER_URL:-https://app.t3.codes}"
+          router_url="${T3CODE_WEB_ROUTER_URL:-}"
           if [[ "${{ needs.preflight.outputs.release_channel }}" == "stable" ]]; then
             channel_name="latest"
           else
             channel_name="nightly"
+          fi
+
+          hosted_channel=""
+          if [[ -n "$router_url" && -n "${T3CODE_WEB_LATEST_DOMAIN:-}" && -n "${T3CODE_WEB_NIGHTLY_DOMAIN:-}" ]]; then
+            hosted_channel="$channel_name"
           fi
 
           echo "Building hosted web app for $channel_name channel."
@@ -1137,7 +1144,7 @@ jobs:
               --build-env "T3CODE_RELAY_CLIENT_OTLP_TRACES_DATASET=${T3CODE_RELAY_CLIENT_OTLP_TRACES_DATASET:-}" \
               --build-env "T3CODE_RELAY_CLIENT_OTLP_TRACES_TOKEN=${T3CODE_RELAY_CLIENT_OTLP_TRACES_TOKEN:-}" \
               --build-env "VITE_HOSTED_APP_URL=$router_url" \
-              --build-env "VITE_HOSTED_APP_CHANNEL=$channel_name"
+              --build-env "VITE_HOSTED_APP_CHANNEL=$hosted_channel"
           )"
           printf '%s\n' "$deployment_output"
           # Vercel can print lockfile warnings to stdout before the deployment URL.
@@ -1189,9 +1196,9 @@ jobs:
             exit 1
           fi
 
-          router_url="${T3CODE_WEB_ROUTER_URL:-https://app.t3.codes}"
-          latest_domain="${T3CODE_WEB_LATEST_DOMAIN:-latest.app.t3.codes}"
-          nightly_domain="${T3CODE_WEB_NIGHTLY_DOMAIN:-nightly.app.t3.codes}"
+          router_url="${T3CODE_WEB_ROUTER_URL:-}"
+          latest_domain="${T3CODE_WEB_LATEST_DOMAIN:-}"
+          nightly_domain="${T3CODE_WEB_NIGHTLY_DOMAIN:-}"
           router_domain="${router_url#http://}"
           router_domain="${router_domain#https://}"
           router_domain="${router_domain%%/*}"
@@ -1202,6 +1209,11 @@ jobs:
           else
             channel_domain="$nightly_domain"
             channel_name="nightly"
+          fi
+
+          if [[ -z "$channel_domain" ]]; then
+            echo "No hosted channel domain is configured; skipping alias."
+            exit 0
           fi
 
           vercel_scope_args=(--scope "${VERCEL_TEAM_SLUG:-$VERCEL_ORG_ID}")
@@ -1219,7 +1231,7 @@ jobs:
           fi
 
   # Same split as the web app: build a production deployment early, then
-  # promote it to t3.codes once the release it links to exists. As above, the
+  # promote it once the release it links to exists. As above, the
   # project's own *.vercel.app hostname moves at build time.
   build_marketing:
     name: Build marketing site

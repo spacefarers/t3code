@@ -1,10 +1,13 @@
-const DEFAULT_MARKETING_SITE_URL = "https://t3.codes";
+const DEFAULT_POLICY_SOURCE_URL =
+  "https://github.com/pingdotgg/t3code/blob/main/apps/marketing/src/pages/";
 
-function resolveMarketingSiteUrl(override: string | undefined): URL {
+function resolveMarketingSiteUrl(override: string | undefined): URL | null {
   try {
-    const url = new URL(override?.trim() || DEFAULT_MARKETING_SITE_URL);
+    const value = override?.trim();
+    if (!value) return null;
+    const url = new URL(value);
     if (url.protocol !== "https:" && url.protocol !== "http:") {
-      return new URL(DEFAULT_MARKETING_SITE_URL);
+      return null;
     }
 
     url.search = "";
@@ -12,13 +15,14 @@ function resolveMarketingSiteUrl(override: string | undefined): URL {
     url.pathname = `${url.pathname.replace(/\/+$/, "")}/`;
     return url;
   } catch {
-    return new URL(DEFAULT_MARKETING_SITE_URL);
+    return null;
   }
 }
 
 const MARKETING_SITE_URL = resolveMarketingSiteUrl(process.env.EXPO_PUBLIC_MARKETING_SITE_URL);
 
 function marketingSiteDocumentUrl(path: string): string {
+  if (!MARKETING_SITE_URL) return `${DEFAULT_POLICY_SOURCE_URL}${path}.astro`;
   return new URL(path, MARKETING_SITE_URL).toString();
 }
 

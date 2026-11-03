@@ -1,1 +1,2 @@
-export const PRIVACY_POLICY_URL = "https://t3.codes/privacy-policy";
+export const PRIVACY_POLICY_URL =
+  "https://github.com/pingdotgg/t3code/blob/main/apps/marketing/src/pages/privacy-policy.astro";

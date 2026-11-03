@@ -28,7 +28,7 @@ window stops its local server. Saving your sign-in alone does not start a server
 or make the machine reachable.
 
 On your other device, sign in to the same T3 Connect account and choose the
-environment. On the app.t3.codes home page with no computer added yet, signing
+environment. On the hosted web app home page with no computer added yet, signing
 in adds compatible computers linked to your account. Over SSH, the CLI prints a
 browser link and a short code. Open the link on any device, confirm the code
 matches, and approve. The CLI continues on its own, so you do not need to forward
@@ -197,8 +197,8 @@ If that port is already in use, choose another with
 
 ### Hosted web app
 
-[app.t3.codes](https://app.t3.codes) needs an HTTPS endpoint. It connects directly
-to your server; a hosted pairing link does not make an unreachable backend
+The hosted web app needs an HTTPS endpoint. It connects directly to your server;
+a hosted pairing link does not make an unreachable backend
 reachable or convert HTTP to HTTPS.
 
 For a plain HTTP LAN endpoint, use the direct pairing URL in a browser that can
