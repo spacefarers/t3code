@@ -14,9 +14,8 @@ export class AnalyticsService extends Context.Service<
 >()("t3/telemetry/AnalyticsService") {}
 
 const service = AnalyticsService.of({
-  record: () => Effect.void,
+  record: Effect.fn("AnalyticsService.record")(() => Effect.void),
   flush: Effect.void,
 });
 
-export const make = Effect.succeed(service);
 export const layer = Layer.succeed(AnalyticsService, service);

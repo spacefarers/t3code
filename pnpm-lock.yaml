@@ -422,12 +422,6 @@ importers:
 
   apps/desktop:
     dependencies:
-      '@clerk/electron':
-        specifier: 0.1.3
-        version: 0.1.3(@clerk/electron-passkeys@0.0.3)(electron-store@8.2.0)(electron@44.10.0(supports-color@8.1.1))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@clerk/electron-passkeys':
-        specifier: 0.0.3
-        version: 0.0.3
       '@crowecawcaw/xa11y':
         specifier: 0.13.0
         version: 0.13.0
@@ -461,9 +455,6 @@ importers:
       electron:
         specifier: 44.10.0
         version: 44.10.0(supports-color@8.1.1)
-      electron-store:
-        specifier: ^8.2.0
-        version: 8.2.0
       electron-updater:
         specifier: ^6.8.9
         version: 6.8.9(supports-color@8.1.1)
@@ -691,9 +682,6 @@ importers:
       expo-notifications:
         specifier: ~58.1.5
         version: 58.1.5(@tsc-rs/typescript@0.8.0)(expo@58.0.14)(react-native@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(react@19.3.0)(supports-color@8.1.1)
-      expo-observe:
-        specifier: ~58.0.15
-        version: 58.0.16(677910f8cba89c74801637ca226a8913)
       expo-paste-input:
         specifier: ^0.1.15
         version: 0.1.15(expo@58.0.14)(react-native@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(react@19.3.0)
@@ -8784,13 +8772,6 @@ packages:
     resolution: {integrity: sha512-KfYbmpRm0VbLjEvVa9yGwCi9GI34xvi7A/HXYWQO65CSD2u3MczUJSuwXKFIxlGsgBQizV9q5J9NHj4VG0n+pA==}
     engines: {node: '>=12.0.0'}
 
-  expo-app-metrics@58.0.14:
-    resolution: {integrity: sha512-Bj/Bx3s5woOKThUcqucmDOdOAxmyHr232KbnOBD8SoA/iUo7E4RBWvRT8DwZOmLJ7H1wFK2ckFTiNoDFB+Ag+Q==}
-    peerDependencies:
-      expo: '*'
-      react: '*'
-      react-native: '*'
-
   expo-application@58.1.2:
     resolution: {integrity: sha512-WYFdNHGaxe/j69oYREhK0cKsKYszuIuz399WXYCP+M1grfO+FCWB/RbuMgaXJsLWlzqhNjA/zLgfJ+33FwrQvw==}
     peerDependencies:
@@ -9001,23 +8982,6 @@ packages:
       expo: '*'
       react: '*'
       react-native: '*'
-
-  expo-observe@58.0.16:
-    resolution: {integrity: sha512-STG1qp5VKA3f0jFQuf+waoO8QNIG6fpog8Hqi2UnklA08ec8a+w+hJm0wL4DgyO8dy5oDdiTVUnpqaloeUC2lQ==}
-    peerDependencies:
-      '@react-navigation/native': ^7.0.0
-      expo: '*'
-      expo-router: 58.0.20
-      react: '*'
-      react-native: '*'
-      react-native-reanimated: 4.7.1
-    peerDependenciesMeta:
-      '@react-navigation/native':
-        optional: true
-      expo-router:
-        optional: true
-      react-native-reanimated:
-        optional: true
 
   expo-paste-input@0.1.15:
     resolution: {integrity: sha512-wV0z1s0/Q4MB+lNiSwbMfck+1Im6sDIcgyCi5Y0aF35n5kcM4FHSOjmRfzn3UbkMlvxmYfDiHeHvIqn22qatqA==}
@@ -13442,6 +13406,7 @@ snapshots:
       '@clerk/electron-passkeys-darwin-x64': 0.0.3
       '@clerk/electron-passkeys-win32-arm64-msvc': 0.0.3
       '@clerk/electron-passkeys-win32-x64-msvc': 0.0.3
+    optional: true
 
   '@clerk/electron@0.1.3(@clerk/electron-passkeys@0.0.3)(electron-store@8.2.0)(electron@44.10.0(supports-color@8.1.1))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
@@ -17471,7 +17436,8 @@ snapshots:
 
   at-least-node@1.0.0: {}
 
-  atomically@1.7.0: {}
+  atomically@1.7.0:
+    optional: true
 
   await-lock@2.2.2: {}
 
@@ -17922,6 +17888,7 @@ snapshots:
       onetime: 5.1.2
       pkg-up: 3.1.0
       semver: 7.8.5
+    optional: true
 
   connect@3.7.0(supports-color@8.1.1):
     dependencies:
@@ -18048,6 +18015,7 @@ snapshots:
   debounce-fn@4.0.0:
     dependencies:
       mimic-fn: 3.1.0
+    optional: true
 
   debug@2.6.9(supports-color@8.1.1):
     dependencies:
@@ -18184,6 +18152,7 @@ snapshots:
   dot-prop@6.0.1:
     dependencies:
       is-obj: 2.0.0
+    optional: true
 
   dotenv-expand@11.0.7:
     dependencies:
@@ -18280,6 +18249,7 @@ snapshots:
     dependencies:
       conf: 10.2.0
       type-fest: 2.19.0
+    optional: true
 
   electron-to-chromium@1.5.430: {}
 
@@ -18485,13 +18455,6 @@ snapshots:
       eventsource-parser: 3.1.0
 
   expect-type@1.4.0: {}
-
-  expo-app-metrics@58.0.14(expo@58.0.14)(react-native@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(react@19.3.0):
-    dependencies:
-      expo: 58.0.14(277a83826bb26ba15256633fefeb0bc2)
-      expo-updates-interface: 58.0.1(expo@58.0.14)
-      react: 19.3.0
-      react-native: 0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(supports-color@8.1.1)(utf-8-validate@6.0.6)
 
   expo-application@58.1.2(expo@58.0.14):
     dependencies:
@@ -18727,17 +18690,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
       - typescript
-
-  expo-observe@58.0.16(677910f8cba89c74801637ca226a8913):
-    dependencies:
-      expo: 58.0.14(277a83826bb26ba15256633fefeb0bc2)
-      expo-app-metrics: 58.0.14(expo@58.0.14)(react-native@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(react@19.3.0)
-      expo-eas-client: 58.0.2
-      react: 19.3.0
-      react-native: 0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(supports-color@8.1.1)(utf-8-validate@6.0.6)
-    optionalDependencies:
-      '@react-navigation/native': 7.5.1(react-native@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(react@19.3.0)
-      react-native-reanimated: 4.7.1(patch_hash=95ee26e5fcab5f50bc4b4c47b3f7e6278a0b20850205efb9f6ee7e70a22d2b59)(react-native-worklets@0.13.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(react-native@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(react@19.3.0)(supports-color@8.1.1))(react-native@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(react@19.3.0)
 
   expo-paste-input@0.1.15(expo@58.0.14)(react-native@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@8.1.1))(bufferutil@4.1.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(@types/react@19.3.0)(bufferutil@4.1.0)(react@19.3.0)(supports-color@8.1.1)(utf-8-validate@6.0.6))(react@19.3.0):
     dependencies:
@@ -19051,6 +19003,7 @@ snapshots:
   find-up@3.0.0:
     dependencies:
       locate-path: 3.0.0
+    optional: true
 
   flatted@3.4.4: {}
 
@@ -19509,7 +19462,8 @@ snapshots:
 
   is-number@7.0.0: {}
 
-  is-obj@2.0.0: {}
+  is-obj@2.0.0:
+    optional: true
 
   is-plain-obj@4.1.0: {}
 
@@ -19632,7 +19586,8 @@ snapshots:
 
   json-schema-traverse@1.0.0: {}
 
-  json-schema-typed@7.0.3: {}
+  json-schema-typed@7.0.3:
+    optional: true
 
   json-schema-typed@8.0.2: {}
 
@@ -19773,6 +19728,7 @@ snapshots:
     dependencies:
       p-locate: 3.0.0
       path-exists: 3.0.0
+    optional: true
 
   lodash.debounce@4.0.8: {}
 
@@ -20458,9 +20414,11 @@ snapshots:
 
   mimic-fn@1.2.0: {}
 
-  mimic-fn@2.1.0: {}
+  mimic-fn@2.1.0:
+    optional: true
 
-  mimic-fn@3.1.0: {}
+  mimic-fn@3.1.0:
+    optional: true
 
   mimic-function@5.0.1: {}
 
@@ -20699,6 +20657,7 @@ snapshots:
   onetime@5.1.2:
     dependencies:
       mimic-fn: 2.1.0
+    optional: true
 
   onetime@7.0.0:
     dependencies:
@@ -20897,6 +20856,7 @@ snapshots:
   p-limit@2.3.0:
     dependencies:
       p-try: 2.2.0
+    optional: true
 
   p-limit@3.1.0:
     dependencies:
@@ -20909,6 +20869,7 @@ snapshots:
   p-locate@3.0.0:
     dependencies:
       p-limit: 2.3.0
+    optional: true
 
   p-queue@9.3.3:
     dependencies:
@@ -20917,7 +20878,8 @@ snapshots:
 
   p-timeout@7.0.2: {}
 
-  p-try@2.2.0: {}
+  p-try@2.2.0:
+    optional: true
 
   package-manager-detector@1.8.0: {}
 
@@ -20949,7 +20911,8 @@ snapshots:
 
   path-browserify@1.0.1: {}
 
-  path-exists@3.0.0: {}
+  path-exists@3.0.0:
+    optional: true
 
   path-expression-matcher@1.6.2: {}
 
@@ -21041,6 +21004,7 @@ snapshots:
   pkg-up@3.1.0:
     dependencies:
       find-up: 3.0.0
+    optional: true
 
   pkijs@3.4.0:
     dependencies:
@@ -22341,7 +22305,8 @@ snapshots:
 
   type-fest@0.7.1: {}
 
-  type-fest@2.19.0: {}
+  type-fest@2.19.0:
+    optional: true
 
   type-fest@5.7.0:
     dependencies:
