@@ -100,7 +100,7 @@ import * as ConnectReachability from "./ConnectReachability.ts";
 import * as ManagedEndpointRuntime from "./ManagedEndpointRuntime.ts";
 import * as ManagedLimits from "../policy/managedLimits.ts";
 import * as ManagedPolicy from "../policy/ManagedPolicy.ts";
-import { relayUrlConfig } from "./publicConfig.ts";
+import { hasCloudPublicConfig, relayUrlConfig } from "./publicConfig.ts";
 import {
   filterRelayResponse,
   relayRequestError,
@@ -1628,14 +1628,16 @@ const make = Effect.gen(function* () {
     Effect.catchIf(ServerSecretStore.isSecretStoreError, internalError("issue-credential")),
   );
 
-  if (!ManagedLimits.allowsConnect(managedPolicy)) {
-    // Reading state and unlinking stay available so clients can show and leave the old link.
-    yield* unlink().pipe(
-      Effect.tap(() => Effect.logInfo("T3 Connect is off by managed policy; unlinked.")),
-      Effect.catch((cause) =>
-        Effect.logWarning("Failed to unlink T3 Connect turned off by managed policy", { cause }),
-      ),
-    );
+  if (!hasCloudPublicConfig || !ManagedLimits.allowsConnect(managedPolicy)) {
+    // Keep cloud state unavailable and avoid contacting the relay when cloud support is absent.
+    if (hasCloudPublicConfig) {
+      yield* unlink().pipe(
+        Effect.tap(() => Effect.logInfo("T3 Connect is off by managed policy; unlinked.")),
+        Effect.catch((cause) =>
+          Effect.logWarning("Failed to unlink T3 Connect turned off by managed policy", { cause }),
+        ),
+      );
+    }
     const refused = Effect.fn("CloudLink.refusedByPolicy")(function* () {
       return yield* ManagedLimits.refuseConnect(managedPolicy);
     });
@@ -1648,7 +1650,13 @@ const make = Effect.gen(function* () {
       linkProof: refused,
       applyRelayConfig: refused,
       linkState,
-      unlink,
+      unlink: hasCloudPublicConfig
+        ? unlink
+        : () =>
+            Effect.succeed({
+              ok: true,
+              endpointRuntimeStatus: { status: "disabled" },
+            }),
       updatePreferences: refused,
       answerHealthRequest: refused,
       mintCredential: refused,

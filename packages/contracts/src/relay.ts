@@ -1295,7 +1295,7 @@ const RelayHooksGroup = HttpApiGroup.make("hooks")
 export const RelayMobileTelemetrySignal = Schema.Literals(["logs", "metrics", "traces"]);
 export type RelayMobileTelemetrySignal = typeof RelayMobileTelemetrySignal.Type;
 
-// expo-observe appends `<easProjectId>/v1/<signal>` to its endpoint URL and cannot send credentials.
+// Kept for compatibility with already released mobile clients.
 const RelayMobileTelemetryParams = Schema.Struct({
   projectId: Schema.String.check(Schema.isGUID()),
   signal: RelayMobileTelemetrySignal,
@@ -1306,7 +1306,7 @@ const RelayMobileTelemetryGroup = HttpApiGroup.make("mobileTelemetry")
       params: RelayMobileTelemetryParams,
     }),
   )
-  .annotate(OpenApi.Description, "Receive mobile app telemetry from expo-observe.");
+  .annotate(OpenApi.Description, "Receive mobile app telemetry from older clients.");
 
 export const RelayApi = HttpApi.make("RelayApi")
   .add(

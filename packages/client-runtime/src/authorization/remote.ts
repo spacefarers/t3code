@@ -9,12 +9,10 @@ import {
   type AuthWebSocketTicketUse,
 } from "@t3tools/contracts";
 import { encodeOAuthScope } from "@t3tools/shared/oauthScope";
-import { hashTelemetryId } from "@t3tools/shared/telemetryId";
 import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";
 import * as Redacted from "effect/Redacted";
 import { environmentEndpointUrl } from "../environment/endpoint.ts";
-import * as ClientCapabilities from "../platform/capabilities.ts";
 import {
   executeEnvironmentHttpRequest,
   makeEnvironmentHttpApiGroupClient,
@@ -40,31 +38,10 @@ const clientMetadataTokenExchangeFields = (
   };
 };
 
-/** Hashes of who is connecting. Only hashes leave the client. */
-export interface ClientOwnerParams {
-  readonly connect?: string;
-  readonly device?: string;
-}
-
-/**
- * Tells the environment, for analytics, which T3 Connect account and device
- * are connecting, so it can count the environment as theirs.
- */
-export const readClientOwnerParams = Effect.gen(function* () {
-  const session = yield* Effect.serviceOption(ClientCapabilities.CloudSession);
-  const account = Option.isSome(session) ? yield* session.value.identity : Option.none();
-  const device = yield* (yield* ClientCapabilities.AnalyticsDevice).id;
-  return {
-    ...(Option.isSome(account) ? { connect: hashTelemetryId(account.value.accountId) } : {}),
-    ...(Option.isSome(device) ? { device: hashTelemetryId(device.value) } : {}),
-  } satisfies ClientOwnerParams;
-});
-
 export const appendClientConnectionParams = (
   url: URL,
   clientMetadata: AuthClientPresentationMetadata | undefined,
   connectionMethod?: ClientConnectionMethod,
-  owners?: ClientOwnerParams,
 ): void => {
   if (clientMetadata?.surface) {
     url.searchParams.set("clientSurface", clientMetadata.surface);
@@ -102,12 +79,6 @@ export const appendClientConnectionParams = (
   }
   if (connectionMethod) {
     url.searchParams.set("connectionMethod", connectionMethod);
-  }
-  if (owners?.connect) {
-    url.searchParams.set("clientOwner", owners.connect);
-  }
-  if (owners?.device) {
-    url.searchParams.set("clientDevice", owners.device);
   }
 };
 
@@ -296,7 +267,6 @@ export const resolveRemoteWebSocketConnectionUrl = Effect.fn(
     url,
     input.clientMetadata,
     input.connectionMethod,
-    yield* readClientOwnerParams,
   );
   return url.toString();
 });
@@ -352,7 +322,6 @@ export const resolveRemoteDpopWebSocketConnectionUrl = Effect.fn(
     url,
     input.clientMetadata,
     input.connectionMethod,
-    yield* readClientOwnerParams,
   );
   return url.toString();
 });

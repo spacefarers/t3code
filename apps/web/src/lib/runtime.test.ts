@@ -8,32 +8,15 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("web runtime relay telemetry policy", () => {
-  it.each([
-    {
-      surface: "desktop opt-out",
-      desktopBridge: { getRelayTelemetryEnabled: () => false },
-      exports: false,
-    },
-    {
-      surface: "desktop enabled",
-      desktopBridge: { getRelayTelemetryEnabled: () => true },
-      exports: true,
-    },
-    {
-      surface: "ordinary browser ignores host opt-out",
-      desktopBridge: undefined,
-      exports: true,
-    },
-  ])("applies $surface before the first relay span", async ({ desktopBridge, exports }) => {
+describe("web runtime relay telemetry", () => {
+  it("does not send relay traces", async () => {
     vi.resetModules();
-    vi.stubEnv("T3CODE_TELEMETRY_ENABLED", "false");
     vi.stubEnv("T3CODE_OTEL_SDK_DISABLED", "true");
     vi.stubEnv("OTEL_SDK_DISABLED", "true");
     vi.stubEnv("VITE_RELAY_OTLP_TRACES_URL", "https://telemetry.example.test/v1/traces");
     vi.stubEnv("VITE_RELAY_OTLP_TRACES_DATASET", "relay-test");
     vi.stubEnv("VITE_RELAY_OTLP_TRACES_TOKEN", "test-token");
-    vi.stubGlobal("window", { desktopBridge });
+    vi.stubGlobal("window", {});
     const fetchFn = vi.fn<typeof fetch>(async () => new Response(null, { status: 202 }));
     vi.stubGlobal("fetch", fetchFn);
     // Re-import after setting runtime policy: static initialization creates the exporter layer.
@@ -67,13 +50,6 @@ describe("web runtime relay telemetry policy", () => {
       await freshRuntime.dispose();
     }
 
-    if (exports) {
-      expect(fetchFn).toHaveBeenCalledOnce();
-      expect(String(fetchFn.mock.calls[0]?.[0])).toBe("https://telemetry.example.test/v1/traces");
-      const payload = new TextDecoder().decode(fetchFn.mock.calls[0]?.[1]?.body as Uint8Array);
-      expect(payload).toContain('"name":"relay.first-operation"');
-    } else {
-      expect(fetchFn).not.toHaveBeenCalled();
-    }
+    expect(fetchFn).not.toHaveBeenCalled();
   });
 });

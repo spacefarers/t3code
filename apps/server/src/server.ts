@@ -963,6 +963,7 @@ const layerMakeServer = Layer.unwrap(
       : Layer.empty;
     const layerCloudDesiredLinkReconcile = Layer.effectDiscard(
       Effect.gen(function* () {
+        if (!hasCloudPublicConfig) return;
         const cloudLink = yield* CloudLink.CloudLink;
         // CloudLink unlinks on startup when the policy turns Connect off; nothing to restore.
         if (!ManagedLimits.allowsConnect(yield* ManagedPolicy.ManagedPolicy)) {
