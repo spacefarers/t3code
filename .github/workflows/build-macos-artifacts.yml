@@ -1,4 +1,4 @@
-name: Build macOS artifacts
+name: Build artifacts
 
 on:
   workflow_dispatch:
@@ -69,21 +69,38 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  package_macos:
-    name: Package macOS ${{ matrix.arch }}
+  package:
+    name: Package ${{ matrix.label }}
     needs: [build_bundle]
     strategy:
       fail-fast: false
       matrix:
         include:
-          - arch: arm64
+          - label: macOS arm64
+            platform: mac
+            target: dmg
+            arch: arm64
             rust_target: aarch64-apple-darwin
             resource_key: darwin-arm64
             runner: macos-15
-          - arch: x64
+            cli_archive: false
+          - label: macOS x64
+            platform: mac
+            target: dmg
+            arch: x64
             rust_target: x86_64-apple-darwin
             resource_key: darwin-x64
             runner: macos-15-intel
+            cli_archive: false
+          # Remote hosts download this archive from the release when the desktop connects over SSH.
+          - label: Linux x64
+            platform: linux
+            target: AppImage
+            arch: x64
+            rust_target: x86_64-unknown-linux-gnu
+            resource_key: linux-x64
+            runner: ubuntu-24.04
+            cli_archive: true
     permissions:
       actions: read
       contents: read
@@ -97,11 +114,44 @@ jobs:
       clerk_jwt_template: ""
       clerk_cli_oauth_client_id: ""
       relay_url: ""
-      label: macOS ${{ matrix.arch }}
+      label: ${{ matrix.label }}
       runner: ${{ matrix.runner }}
-      platform: mac
-      target: dmg
+      platform: ${{ matrix.platform }}
+      target: ${{ matrix.target }}
       arch: ${{ matrix.arch }}
       rust_target: ${{ matrix.rust_target }}
       resource_key: ${{ matrix.resource_key }}
-      cli_archive: false
+      cli_archive: ${{ matrix.cli_archive }}
+
+  publish_release:
+    name: Publish GitHub release
+    needs: [build_bundle, package]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Download desktop artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: desktop-*
+          merge-multiple: true
+          path: release-assets
+
+      - name: Download CLI archives
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: cli-*
+          merge-multiple: true
+          path: release-assets
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: v${{ needs.build_bundle.outputs.version }}
+        run: |
+          set -euo pipefail
+          cd release-assets
+          sha256sum t3-*.tar.gz > SHA256SUMS
+          gh release create "$TAG" ./* --target "$GITHUB_SHA" --title "$TAG" --notes "Built from $GITHUB_SHA."
